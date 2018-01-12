@@ -6,8 +6,12 @@ import javax.crypto.Cipher
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.DESKeySpec
 
-val PASS = "@Kar98Lambda"
 val input = Scanner(System.`in`)
+val d : D = D()
+
+val secretKey = SecretKeyFactory.getInstance("DES").generateSecret(DESKeySpec(d.key.toByteArray(Charset.forName("UTF-8"))))
+val desCipher = Cipher.getInstance("DES")
+
 
 fun main(args: Array<String>) {
     if(login()) {
@@ -25,7 +29,7 @@ fun login(): Boolean{
         println("$ : ")
         pass = input.nextLine()
     }
-    if(pass == PASS){
+    if(pass == d.password){
        return true
     }
     return false
@@ -44,8 +48,11 @@ fun option(): Unit {
     println("[2] Decrypt \"e.dat\"")
     println("[3] View decrypted \"e.dat\" [\"e.dat\" must be existed][Read Only]")
     println("[4] Create \"e.dat\" from...")
+    println("[5] Change a password")
+    println("[6] Exit")
     println("** e.dat is a encrypted file...")
     println("** d.dat is a decrypted file...")
+    println("** CODE (1) : Determine to a success operation")
     print("\n\nPlease select... : ")
     when (input.next()) {
         "1" -> {
@@ -59,6 +66,12 @@ fun option(): Unit {
         }
         "4" -> {
             opt4();option()
+        }
+        "5" -> {
+            opt5();option()
+        }
+        "6" -> {
+            println("บัย")
         }
         else -> option()
     }
@@ -94,9 +107,6 @@ fun opt4() {//Create  e.dat
     println("\n*****Success!... $fileName is encrypted to \"e.dat\"... *****\n")
 }
 
-val secretKey = SecretKeyFactory.getInstance("DES").generateSecret(DESKeySpec("kogy9i8u".toByteArray(Charset.forName("UTF-8"))))
-val desCipher = Cipher.getInstance("DES")
-
 fun encrypt(fileName: String) {
     var fis = FileInputStream(File(fileName))
     val dos = DataOutputStream(FileOutputStream("e.dat"))
@@ -122,4 +132,12 @@ fun decrypt() {
     eDatFis.close()
     File("e.dat").delete()
     println("\n*****Decrypted..*****\n")
+
+}
+
+fun opt5(){
+    println("Enter new password... : ")
+    input.nextLine()
+    var newPass = input.nextLine()
+    d.updatePass(newPass)
 }
