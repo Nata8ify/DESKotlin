@@ -16,9 +16,16 @@ fun main(args: Array<String>) {
     }
 }
 
+lateinit var pass : String
 fun login(): Boolean{
-    println("$ : ")
-    if(input.next() == PASS){
+
+    if(System.console() != null){
+        pass = String(System.console().readPassword("> : ") as CharArray)
+    } else {
+        println("$ : ")
+        pass = input.nextLine()
+    }
+    if(pass == PASS){
        return true
     }
     return false
